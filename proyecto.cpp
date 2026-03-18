@@ -1,4 +1,6 @@
 #include <iostream>
+#include <fstream>
+
 using namespace std;
 
 
@@ -28,7 +30,7 @@ struct sesion {
     int duracion;
     char observaciones[100];
     bool penalizacion;
-}
+};
 
 void cargarEquipos();
 void cargarUsuarios();
@@ -40,7 +42,7 @@ void rankingUsuarios();
 
 
 int main () {
-
+    int menu;
 
     cout << "Bienvenido al menu"; 
     cout << "Oprima '1' para cargar equipos desde un archivo" << endl;
@@ -87,7 +89,7 @@ int main () {
             break
 
             case 8:
-            rankingUsuarios();
+            cout << "Saliendo del programa...";
             break;
 
             default:
@@ -95,6 +97,40 @@ int main () {
             cin >> menu;
         }
 
-    } while (menu != 0);
+    } while (menu != 8);
     return 0;
+}
+
+void cargarEquipos() {
+
+    char nombre[30];
+
+    cout << "Ingrese el nombre del archivo que le gustaria cargar: ";
+    cin.ignore();
+    cin.getline(nombre, 30);
+
+    fstream archivo(nombre, ios::binary | ios::in | ios::out);
+    if (!archivo) {
+        cout << "El archivo de equipos no ha cargado correctamente";
+        return;
+    }
+
+    cout << "El archivo de equipos ha cargado correctamente!";
+}
+
+void cargarUsuarios() {
+
+    char nombre[30];
+
+    cout << "Ingrese el nombre del archivo que le gustaria cargar: ";
+    cin.ignore();
+    cin.getline(nombre, 30);
+
+    fstream archivo(nombre, ios::binary | ios::in | ios::out);
+    if (!archivo) {
+        cout << "El archivo de usuarios no ha cargado correctamente";
+        return;
+    }
+
+    cout << "El archivo de usuarios ha cargado correctamente!";
 }
