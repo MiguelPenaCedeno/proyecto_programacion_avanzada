@@ -1,8 +1,7 @@
 #include <iostream>
 #include <fstream>
-
+#include <string>
 using namespace std;
-
 
 struct equipo {
     int codigo_equipo;
@@ -32,105 +31,205 @@ struct sesion {
     bool penalizacion;
 };
 
-void cargarEquipos();
-void cargarUsuarios();
+void cargarEquipos(char[]);
+void cargarUsuarios(char[]);
 void consultarEstadoOperativo();
 void programarSesionUso();
 void registrarCierreSesion();
 void generarInformeUso();
-void rankingUsuarios();
+void generarRankingUsuarios();
 
-
-int main () {
+int main() {
     int menu;
+    char nombre[30];
 
-    cout << "Bienvenido al menu"; 
+    cout << "Bienvenido al menu" << endl; 
     cout << "Oprima '1' para cargar equipos desde un archivo" << endl;
     cout << "Oprima '2' para cargar usuarios desde un archivo" << endl;
     cout << "Oprima '3' para consultar el estado operativo de un laboratorio" << endl;
-    cout << "Oprima '4' para programar una sesion de uso" << endl; 
+    cout << "Oprima '4' para programar una sesion de uso" << endl;
     cout << "Oprima '5' para registrar cierre de sesion y observaciones" << endl;
     cout << "Oprima '6' para generar un informe de uso intensivo de equipos" << endl;
     cout << "Oprima '7' para generar un ranking de usuarios criticos" << endl;
     cout << "Oprima '8' para salir" << endl;
-    cout << "Ingrese su elección: ";
+    cout << "Ingrese su eleccion: ";
     cin >> menu;
 
-
     do {
-        switch(menu) {
-
+        switch (menu) {
             case 1:
-            cargarEquipos();
-            break;
+                cout << "Ingrese el nombre del archivo que le gustaria cargar: ";
+                cin.ignore();
+                cin.getline(nombre, 30);
+                cargarEquipos(nombre);
+                break;
 
             case 2:
-            cargarUsuarios();
-            break;
+                cout << "Ingrese el nombre del archivo que le gustaria cargar: ";
+                cin.ignore();
+                cin.getline(nombre, 30);
+                cargarUsuarios(nombre);
+                break;
 
             case 3:
-            consultarEstadoOperativo();
-            break;
+                consultarEstadoOperativo();
+                break;
 
             case 4:
-            programarSesionUso();
-            break;
+                programarSesionUso();
+                break;
 
             case 5:
-            registrarCierreSesion();
-            break;
+                registrarCierreSesion();
+                break;
 
             case 6:
-            generarInformeUso();
-            break;
+                generarInformeUso();
+                break;
 
             case 7:
-            generarRankingUsuarios();
-            break
+                generarRankingUsuarios();
+                break;
 
             case 8:
-            cout << "Saliendo del programa...";
-            break;
+                cout << "Saliendo del programa..." << endl;
+                break;
 
             default:
-            cout << "Valor ingresado no valido, intente nuevamente: ";
-            cin >> menu;
+                cout << "Valor ingresado no valido, intente nuevamente." << endl;
         }
 
+        if (menu != 8) {
+            cout << "Bienvenido de vuelta al menu\n";
+            cout << "Oprima '1' para cargar equipos desde un archivo" << endl;
+            cout << "Oprima '2' para cargar usuarios desde un archivo" << endl;
+            cout << "Oprima '3' para consultar el estado operativo de un laboratorio" << endl;
+            cout << "Oprima '4' para programar una sesion de uso" << endl;
+            cout << "Oprima '5' para registrar cierre de sesion y observaciones" << endl;
+            cout << "Oprima '6' para generar un informe de uso intensivo de equipos" << endl;
+            cout << "Oprima '7' para generar un ranking de usuarios criticos" << endl;
+            cout << "Oprima '8' para salir" << endl;
+            cout << "Ingrese su eleccion: ";
+            cin >> menu;
+        }
     } while (menu != 8);
+
     return 0;
 }
 
-void cargarEquipos() {
+void cargarEquipos(char nombre[]) {
 
-    char nombre[30];
+    bool eleccion;
 
-    cout << "Ingrese el nombre del archivo que le gustaria cargar: ";
-    cin.ignore();
-    cin.getline(nombre, 30);
-
-    fstream archivo(nombre, ios::binary | ios::in | ios::out);
+    ifstream archivo(nombre);
     if (!archivo) {
-        cout << "El archivo de equipos no ha cargado correctamente";
+        cout << "El archivo de equipos no ha cargado correctamente" << endl;
         return;
     }
+    cout << "El archivo de equipos ha cargado correctamente!" << endl;
 
-    cout << "El archivo de equipos ha cargado correctamente!";
+    // la funcion hasta aqui es lo que pide el enunciado
+    // lo que sigue abajo es opcional y seguramente no lo dejemos en la entrega final ya que el enunciado del taller no lo pide
+    // es solamente para ver que en efecto las cosas cargan bien
+
+    cout << "Le gustaria imprimir los primeros dos registros del archivo?" << endl;
+    cout << "Ingrese 1 para si, 0 para no: ";
+
+    cin >> eleccion;
+
+    if (eleccion) {
+    
+    equipo e;
+    int contador = 0;
+
+    while (contador < 2) {
+        archivo >> e.codigo_equipo;
+        archivo.ignore();
+        archivo.getline(e.nombre, 30);
+        archivo.getline(e.laboratorio, 40);
+        archivo >> e.tipo >> e.estado_operativo >> e.costo_estimado >> e.semestre_minimo;
+        archivo.ignore();
+        archivo.getline(e.descripcion_tecnica, 100);
+
+        cout << "--- Equipo " << contador + 1 << " ---" << endl;
+        cout << "Codigo: "      << e.codigo_equipo       << endl;
+        cout << "Nombre: "      << e.nombre              << endl;
+        cout << "Laboratorio: " << e.laboratorio         << endl;
+        cout << "Tipo: "        << e.tipo                << endl;
+        cout << "Operativo: "   << e.estado_operativo    << endl;
+        cout << "Costo: "       << e.costo_estimado      << endl;
+        cout << "Semestre min: "<< e.semestre_minimo     << endl;
+        cout << "Descripcion: " << e.descripcion_tecnica << endl;
+
+        contador++;
+        }
+    } else {
+        
+    }
 }
 
-void cargarUsuarios() {
 
-    char nombre[30];
+void cargarUsuarios(char nombre[]) {
+    bool eleccion;
 
-    cout << "Ingrese el nombre del archivo que le gustaria cargar: ";
-    cin.ignore();
-    cin.getline(nombre, 30);
-
-    fstream archivo(nombre, ios::binary | ios::in | ios::out);
+    ifstream archivo(nombre);
     if (!archivo) {
-        cout << "El archivo de usuarios no ha cargado correctamente";
+        cout << "El archivo de usuarios no ha cargado correctamente" << endl;
         return;
     }
+    cout << "El archivo de usuarios ha cargado correctamente!" << endl;
 
-    cout << "El archivo de usuarios ha cargado correctamente!";
+
+    // la funcion hasta aqui es lo que pide el enunciado
+    // lo que sigue abajo es opcional y seguramente no lo dejemos en la entrega final ya que el enunciado del taller no lo pide
+    // es solamente para ver que en efecto las cosas cargan bien
+    
+    cout << "Le gustaria imprimir los primeros dos registros del archivo?" << endl;
+    cout << "Ingrese 1 para si, 0 para no: ";
+
+    cin >> eleccion;
+
+    if (eleccion) {
+    usuario u;
+    int contador = 0;
+
+    while (contador < 2) {
+        archivo >> u.codigo_institucional;
+        archivo.ignore();
+        archivo.getline(u.nombre, 40);
+        archivo.getline(u.programa_academico, 40);
+        archivo >> u.semestre;
+
+        cout << "--- Usuario " << contador + 1 << " ---" << endl;
+        cout << "Codigo: "   << u.codigo_institucional << endl;
+        cout << "Nombre: "   << u.nombre               << endl;
+        cout << "Programa: " << u.programa_academico   << endl;
+        cout << "Semestre: " << u.semestre             << endl;
+
+        contador++;
+        }
+    } else {
+        
+    }
+}
+
+
+void consultarEstadoOperativo() {
+    cout << "Funcion consultar estado operativo - por implementar" << endl;
+}
+
+void programarSesionUso() {
+    cout << "Funcion programar sesion de uso - por implementar" << endl;
+}
+
+void registrarCierreSesion() {
+    cout << "Funcion registrar cierre de sesion - por implementar" << endl;
+}
+
+void generarInformeUso() {
+    cout << "Funcion generar informe de uso - por implementar" << endl;
+}
+
+void generarRankingUsuarios() {
+    cout << "Funcion generar ranking de usuarios - por implementar" << endl;
 }
