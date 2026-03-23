@@ -29,7 +29,7 @@ struct SesionUso {
     int duracion_programada;
     int duracion_real;
     char observaciones[100];
-    double penalizacion;
+    int penalizacion;
     bool cerrada;
 };
 
@@ -444,7 +444,7 @@ void programarSesionUso(Equipo* equipos, int num_equipos, Usuario* usuarios, int
     sesion.duracion_programada = duracion;
     sesion.duracion_real = 0;
     strcpy(sesion.observaciones, "");
-    sesion.penalizacion = 0.0;
+    sesion.penalizacion = 0;
     sesion.cerrada = false;
 
     ofstream archivo_binario("sesiones.dat", ios::binary | ios::app);
@@ -661,11 +661,11 @@ void generarRankingUsuarios(Usuario* usuarios, int num_usuarios) {
         return;
     }
 
-    double* penalizacion_acumulada = new double[num_usuarios];
+    int* penalizacion_acumulada = new int[num_usuarios];
     int* cantidad_sesiones = new int[num_usuarios];
 
     for (int i = 0; i < num_usuarios; i++) {
-        *(penalizacion_acumulada + i) = 0.0;
+        *(penalizacion_acumulada + i) = 0;
         *(cantidad_sesiones + i) = 0;
     }
 
@@ -692,7 +692,7 @@ void generarRankingUsuarios(Usuario* usuarios, int num_usuarios) {
 
     int mostrados = 0;
     while (mostrados < 3 && mostrados < num_usuarios) {
-        double mayor_indice = -1.0;
+        int mayor_indice = -1;
         int posicion_mayor = -1;
 
         for (int i = 0; i < num_usuarios; i++) {
@@ -703,7 +703,7 @@ void generarRankingUsuarios(Usuario* usuarios, int num_usuarios) {
                 continue;
             }
 
-            double indice = *(penalizacion_acumulada + i) / *(cantidad_sesiones + i);
+            int indice = *(penalizacion_acumulada + i) / *(cantidad_sesiones + i);
             if (indice > mayor_indice) {
                 mayor_indice = indice;
                 posicion_mayor = i;
