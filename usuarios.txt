@@ -1,20 +1,5 @@
-20231001
-Maria Fernanda Torres
-Ingenieria de Sistemas
-4
-20231002
-Juan Sebastian Rojas
-Ingenieria Electronica
-6
-20231003
-Laura Camila Mendez
-Biologia
-3
-20231004
-Andres Felipe Castillo
-Ingenieria Industrial
-7
-20231005
-Valentina Ospina
-Ciencias de la Computacion
-2
+20231001 * Maria Fernanda Torres * Ingenieria de Sistemas * 4
+20231002 * Juan Sebastian Rojas * Ingenieria Electronica * 6
+20231003 * Laura Camila Mendez * Biologia * 3
+20231004 * Andres Felipe Castillo * Ingenieria Industrial * 7
+20231005 * Valentina Ospina * Ciencias de la Computacion * 2

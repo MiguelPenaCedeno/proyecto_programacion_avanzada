@@ -1,40 +1,5 @@
-101
-Microscopio Electronico
-Laboratorio de Biologia
-1
-1
-15000000
-3
-Microscopio de barrido electronico con resolucion de 1nm, ideal para analisis de materiales
-102
-Impresora 3D Ultimaker
-Laboratorio de Prototipado
-2
-1
-8500000
-2
-Impresora FDM con volumen de impresion 330x240x300mm, compatible con PLA ABS y Nylon
-103
-Servidor Dell PowerEdge
-Laboratorio de Redes
-3
-0
-25000000
-4
-Servidor rack 2U con 64GB RAM, 2 procesadores Xeon y almacenamiento RAID de 10TB
-104
-Osciloscopio Digital Tektronix
-Laboratorio de Electronica
-1
-1
-6200000
-3
-Osciloscopio de 4 canales 200MHz con pantalla tactil y analisis FFT integrado
-105
-Brazo Robotico KUKA
-Laboratorio de Automatizacion
-2
-1
-45000000
-5
-Brazo industrial de 6 ejes con precision de 0.05mm, programable en KRL y compatible con ROS
+101 * Microscopio Electronico * Laboratorio de Biologia * Medicion * operativo * 15000000 * 3 * Microscopio de barrido electronico con resolucion de 1nm
+102 * Impresora 3D Ultimaker * Laboratorio de Prototipado * Fabricacion * operativo * 8500000 * 2 * Impresora FDM con volumen 330x240x300mm compatible con PLA ABS y Nylon
+103 * Servidor Dell PowerEdge * Laboratorio de Redes * Computo * en mantenimiento * 25000000 * 4 * Servidor rack 2U con 64GB RAM y almacenamiento RAID 10TB
+104 * Osciloscopio Digital Tektronix * Laboratorio de Electronica * Medicion * operativo * 6200000 * 3 * Osciloscopio de 4 canales 200MHz con pantalla tactil y FFT
+105 * Brazo Robotico KUKA * Laboratorio de Automatizacion * Robotica * operativo * 45000000 * 5 * Brazo industrial de 6 ejes con precision de 0.05mm programable en KRL
