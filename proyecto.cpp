@@ -51,6 +51,17 @@ int main() {
     int siguiente_sesion = 1;
     int menu;
 
+    ifstream archivo_inicio("sesiones.dat", ios::binary);
+    if (archivo_inicio) {
+        SesionUso sesion_temp;
+        while (archivo_inicio.read(reinterpret_cast<char*>(&sesion_temp), sizeof(SesionUso))) {
+            if (sesion_temp.codigo_sesion >= siguiente_sesion) {
+                siguiente_sesion = sesion_temp.codigo_sesion + 1;
+            }
+        }
+        archivo_inicio.close();
+    }
+
     cout << "Bienvenido al sistema de gestion de equipos de laboratorio" << endl;
 
     do {
@@ -62,15 +73,16 @@ int main() {
         cout << "6. Generar informe de uso intensivo de equipos" << endl;
         cout << "7. Generar ranking de usuarios criticos" << endl;
         cout << "8. Salir" << endl;
-        cout << "Ingrese su eleccion: ";
-        cin >> menu;
 
-        if (cin.fail()) {
-            cin.clear();
-            cin.ignore(1000, '\n');
-            cout << "Entrada no valida. Ingrese un numero entre 1 y 8." << endl;
-            menu = 0;
-            continue;
+        char entrada[10];
+        menu = 0;
+        while (menu < 1 || menu > 8) {
+            cout << "Ingrese su eleccion: ";
+            cin.getline(entrada, 10);
+            menu = atoi(entrada);
+            if (menu < 1 || menu > 8) {
+                cout << "Opcion no valida, intente nuevamente." << endl;
+            }
         }
 
         switch (menu) {
@@ -103,8 +115,12 @@ int main() {
         }
     } while (menu != 8);
 
-    if (equipos != nullptr) delete[] equipos;
-    if (usuarios != nullptr) delete[] usuarios;
+    if (equipos != nullptr) {
+        delete[] equipos;
+    }
+    if (usuarios != nullptr) {
+        delete[] usuarios;
+    }
 
     return 0;
 }
@@ -112,23 +128,26 @@ int main() {
 void cargarEquipos(Equipo*& equipos, int& num_equipos) {
     char nombre_archivo[100];
     cout << "Ingrese el nombre del archivo de equipos: ";
-    cin.ignore();
     cin.getline(nombre_archivo, 100);
 
     ifstream archivo(nombre_archivo);
     if (!archivo) {
-        cout << "Error: no se pudo abrir el archivo." << endl;
+        cout << "Error: no se pudo abrir el archivo" << endl;
         return;
     }
 
     int n = 0;
-    char linea[512];
-    while (archivo.getline(linea, 512)) {
-        if (strlen(linea) > 0) n++;
+    char linea[500];
+    while (archivo.getline(linea, 500)) {
+        if (strlen(linea) > 0) {
+            n++;
+        }
     }
     archivo.close();
 
-    if (equipos != nullptr) delete[] equipos;
+    if (equipos != nullptr) {
+        delete[] equipos;
+    }
 
     equipos = new Equipo[n];
     num_equipos = n;
@@ -146,28 +165,40 @@ void cargarEquipos(Equipo*& equipos, int& num_equipos) {
         inicio = campo;
         while (*inicio == ' ') inicio++;
         fin = campo + strlen(campo) - 1;
-        while (fin >= campo && *fin == ' ') { *fin = '\0'; fin--; }
+        while (fin >= campo && *fin == ' ') {
+            *fin = '\0';
+            fin--;
+        }
         strcpy(ptr->nombre, inicio);
 
         archivo.getline(campo, 100, '*');
         inicio = campo;
         while (*inicio == ' ') inicio++;
         fin = campo + strlen(campo) - 1;
-        while (fin >= campo && *fin == ' ') { *fin = '\0'; fin--; }
+        while (fin >= campo && *fin == ' ') {
+            *fin = '\0';
+            fin--;
+        }
         strcpy(ptr->laboratorio, inicio);
 
         archivo.getline(campo, 100, '*');
         inicio = campo;
         while (*inicio == ' ') inicio++;
         fin = campo + strlen(campo) - 1;
-        while (fin >= campo && *fin == ' ') { *fin = '\0'; fin--; }
+        while (fin >= campo && *fin == ' ') {
+            *fin = '\0';
+            fin--;
+        }
         strcpy(ptr->tipo, inicio);
 
         archivo.getline(campo, 100, '*');
         inicio = campo;
         while (*inicio == ' ') inicio++;
         fin = campo + strlen(campo) - 1;
-        while (fin >= campo && *fin == ' ') { *fin = '\0'; fin--; }
+        while (fin >= campo && *fin == ' ') {
+            *fin = '\0';
+            fin--;
+        }
         strcpy(ptr->estado, inicio);
 
         archivo.getline(campo, 100, '*');
@@ -180,43 +211,48 @@ void cargarEquipos(Equipo*& equipos, int& num_equipos) {
         inicio = campo;
         while (*inicio == ' ') inicio++;
         fin = campo + strlen(campo) - 1;
-        while (fin >= campo && *fin == ' ') { *fin = '\0'; fin--; }
+        while (fin >= campo && *fin == ' ') {
+            *fin = '\0';
+            fin--;
+        }
         strcpy(ptr->descripcion, inicio);
 
         ptr++;
     }
     archivo.close();
 
-    cout << "Se cargaron " << num_equipos << " equipos exitosamente." << endl;
+    cout << "Se cargaron " << num_equipos << " equipos" << endl;
     ptr = equipos;
     for (int i = 0; i < num_equipos; i++) {
-        cout << "  [" << (ptr + i)->codigo << "] "
-             << (ptr + i)->nombre << " - "
-             << (ptr + i)->laboratorio << " ("
-             << (ptr + i)->estado << ")" << endl;
+        cout << (ptr + i)->codigo << " - " << (ptr + i)->nombre
+             << ", " << (ptr + i)->laboratorio
+             << ", " << (ptr + i)->estado << endl;
     }
 }
 
 void cargarUsuarios(Usuario*& usuarios, int& num_usuarios) {
     char nombre_archivo[100];
     cout << "Ingrese el nombre del archivo de usuarios: ";
-    cin.ignore();
     cin.getline(nombre_archivo, 100);
 
     ifstream archivo(nombre_archivo);
     if (!archivo) {
-        cout << "Error: no se pudo abrir el archivo." << endl;
+        cout << "Error: no se pudo abrir el archivo" << endl;
         return;
     }
 
     int n = 0;
-    char linea[512];
-    while (archivo.getline(linea, 512)) {
-        if (strlen(linea) > 0) n++;
+    char linea[500];
+    while (archivo.getline(linea, 500)) {
+        if (strlen(linea) > 0) {
+            n++;
+        }
     }
     archivo.close();
 
-    if (usuarios != nullptr) delete[] usuarios;
+    if (usuarios != nullptr) {
+        delete[] usuarios;
+    }
 
     usuarios = new Usuario[n];
     num_usuarios = n;
@@ -234,14 +270,20 @@ void cargarUsuarios(Usuario*& usuarios, int& num_usuarios) {
         inicio = campo;
         while (*inicio == ' ') inicio++;
         fin = campo + strlen(campo) - 1;
-        while (fin >= campo && *fin == ' ') { *fin = '\0'; fin--; }
+        while (fin >= campo && *fin == ' ') {
+            *fin = '\0';
+            fin--;
+        }
         strcpy(ptr->nombre, inicio);
 
         archivo.getline(campo, 100, '*');
         inicio = campo;
         while (*inicio == ' ') inicio++;
         fin = campo + strlen(campo) - 1;
-        while (fin >= campo && *fin == ' ') { *fin = '\0'; fin--; }
+        while (fin >= campo && *fin == ' ') {
+            *fin = '\0';
+            fin--;
+        }
         strcpy(ptr->programa_academico, inicio);
 
         archivo.getline(campo, 100);
@@ -251,39 +293,46 @@ void cargarUsuarios(Usuario*& usuarios, int& num_usuarios) {
     }
     archivo.close();
 
-    cout << "Se cargaron " << num_usuarios << " usuarios exitosamente." << endl;
+    cout << "Se cargaron " << num_usuarios << " usuarios" << endl;
     ptr = usuarios;
     for (int i = 0; i < num_usuarios; i++) {
-        cout << "  [" << (ptr + i)->codigo_institucional << "] "
-             << (ptr + i)->nombre << " - "
-             << (ptr + i)->programa_academico
-             << " (Sem " << (ptr + i)->semestre << ")" << endl;
+        cout << (ptr + i)->codigo_institucional << " - " << (ptr + i)->nombre
+             << ", " << (ptr + i)->programa_academico
+             << ", semestre " << (ptr + i)->semestre << endl;
     }
 }
 
 void consultarEstadoOperativo(Equipo* equipos, int num_equipos) {
     if (equipos == nullptr || num_equipos == 0) {
-        cout << "No hay equipos cargados. Use la opcion 1 primero." << endl;
+        cout << "No hay equipos cargados, use la opcion 1 primero" << endl;
         return;
     }
 
     char lab[50];
     cout << "Ingrese el nombre del laboratorio: ";
-    cin.ignore();
     cin.getline(lab, 50);
 
-    bool encontrado = false;
     Equipo* ptr = equipos;
 
-    cout << "\nEquipos operativos:" << endl;
+    bool encontrado = false;
     for (int i = 0; i < num_equipos; i++) {
         if (strcmp((ptr + i)->laboratorio, lab) == 0) {
             encontrado = true;
-            if (strcmp((ptr + i)->estado, "operativo") == 0) {
-                cout << "  [" << (ptr + i)->codigo << "] "
-                     << (ptr + i)->nombre
-                     << " (Semestre min: " << (ptr + i)->semestre_minimo << ")" << endl;
-            }
+            break;
+        }
+    }
+
+    if (!encontrado) {
+        cout << "No se encontraron equipos en ese laboratorio" << endl;
+        return;
+    }
+
+    cout << "\nEquipos operativos:" << endl;
+    for (int i = 0; i < num_equipos; i++) {
+        if (strcmp((ptr + i)->laboratorio, lab) == 0 &&
+            strcmp((ptr + i)->estado, "operativo") == 0) {
+            cout << (ptr + i)->codigo << " - " << (ptr + i)->nombre
+                 << ", semestre minimo: " << (ptr + i)->semestre_minimo << endl;
         }
     }
 
@@ -291,8 +340,7 @@ void consultarEstadoOperativo(Equipo* equipos, int num_equipos) {
     for (int i = 0; i < num_equipos; i++) {
         if (strcmp((ptr + i)->laboratorio, lab) == 0 &&
             strcmp((ptr + i)->estado, "en mantenimiento") == 0) {
-            cout << "  [" << (ptr + i)->codigo << "] "
-                 << (ptr + i)->nombre << endl;
+            cout << (ptr + i)->codigo << " - " << (ptr + i)->nombre << endl;
         }
     }
 
@@ -300,33 +348,31 @@ void consultarEstadoOperativo(Equipo* equipos, int num_equipos) {
     for (int i = 0; i < num_equipos; i++) {
         if (strcmp((ptr + i)->laboratorio, lab) == 0 &&
             (ptr + i)->semestre_minimo >= 4) {
-            cout << "  [" << (ptr + i)->codigo << "] "
-                 << (ptr + i)->nombre
-                 << " (Requiere semestre " << (ptr + i)->semestre_minimo << "+)" << endl;
+            cout << (ptr + i)->codigo << " - " << (ptr + i)->nombre
+            << ", requiere semestre " << (ptr + i)->semestre_minimo << endl;
         }
-    }
-
-    if (!encontrado) {
-        cout << "No se encontraron equipos en el laboratorio \"" << lab << "\"." << endl;
     }
 }
 
 void programarSesionUso(Equipo* equipos, int num_equipos, Usuario* usuarios, int num_usuarios, int& siguiente_sesion) {
     if (equipos == nullptr || usuarios == nullptr) {
-        cout << "Debe cargar equipos y usuarios primero (opciones 1 y 2)." << endl;
+        cout << "Debe cargar equipos y usuarios primero (opciones 1 y 2)" << endl;
         return;
     }
 
     int cod_usuario, cod_equipo, duracion;
     char fecha[20];
 
-    cout << "Ingrese codigo del usuario: ";
-    cin >> cod_usuario;
-    if (cin.fail()) {
-        cin.clear();
-        cin.ignore(1000, '\n');
-        cout << "Entrada no valida. Debe ingresar un numero." << endl;
-        return;
+    char entrada[20];
+
+    cod_usuario = 0;
+    while (cod_usuario <= 0) {
+        cout << "Ingrese codigo del usuario: ";
+        cin.getline(entrada, 20);
+        cod_usuario = atoi(entrada);
+        if (cod_usuario <= 0) {
+            cout << "Entrada no valida, intente nuevamente" << endl;
+        }
     }
 
     Usuario* usuario_encontrado = nullptr;
@@ -338,17 +384,18 @@ void programarSesionUso(Equipo* equipos, int num_equipos, Usuario* usuarios, int
         }
     }
     if (usuario_encontrado == nullptr) {
-        cout << "Usuario no encontrado." << endl;
+        cout << "Usuario no encontrado" << endl;
         return;
     }
 
-    cout << "Ingrese codigo del equipo: ";
-    cin >> cod_equipo;
-    if (cin.fail()) {
-        cin.clear();
-        cin.ignore(1000, '\n');
-        cout << "Entrada no valida. Debe ingresar un numero." << endl;
-        return;
+    cod_equipo = 0;
+    while (cod_equipo <= 0) {
+        cout << "Ingrese codigo del equipo: ";
+        cin.getline(entrada, 20);
+        cod_equipo = atoi(entrada);
+        if (cod_equipo <= 0) {
+            cout << "Entrada no valida, intente nuevamente" << endl;
+        }
     }
 
     Equipo* equipo_encontrado = nullptr;
@@ -365,28 +412,29 @@ void programarSesionUso(Equipo* equipos, int num_equipos, Usuario* usuarios, int
     }
 
     if (strcmp(equipo_encontrado->estado, "operativo") != 0) {
-        cout << "El equipo no esta operativo (estado actual: "
-             << equipo_encontrado->estado << ")." << endl;
+        cout << "El equipo no esta operativo (estado actual: " << equipo_encontrado->estado << ")" << endl;
         return;
     }
 
     if (usuario_encontrado->semestre < equipo_encontrado->semestre_minimo) {
         cout << "El usuario esta en semestre " << usuario_encontrado->semestre
              << " pero el equipo requiere semestre "
-             << equipo_encontrado->semestre_minimo << " minimo." << endl;
+             << equipo_encontrado->semestre_minimo << " minimo" << endl;
         return;
     }
 
-    cout << "Ingrese duracion estimada (horas): ";
-    cin >> duracion;
-    if (cin.fail() || duracion <= 0) {
-        cin.clear();
-        cin.ignore(1000, '\n');
-        cout << "Entrada no valida. La duracion debe ser un numero mayor a 0." << endl;
-        return;
+    duracion = 0;
+    while (duracion <= 0) {
+        cout << "Ingrese duracion estimada (horas): ";
+        cin.getline(entrada, 20);
+        duracion = atoi(entrada);
+        if (duracion <= 0) {
+            cout << "La duracion debe ser mayor a 0" << endl;
+        }
     }
+
     cout << "Ingrese fecha (DD/MM/AAAA): ";
-    cin >> fecha;
+    cin.getline(fecha, 20);
 
     SesionUso sesion;
     sesion.codigo_sesion = siguiente_sesion++;
@@ -407,30 +455,52 @@ void programarSesionUso(Equipo* equipos, int num_equipos, Usuario* usuarios, int
     archivo_binario.write(reinterpret_cast<char*>(&sesion), sizeof(SesionUso));
     archivo_binario.close();
 
-    cout << "\nSesion registrada exitosamente:" << endl;
-    cout << "  Codigo sesion: " << sesion.codigo_sesion << endl;
-    cout << "  Equipo: " << equipo_encontrado->nombre << endl;
-    cout << "  Usuario: " << usuario_encontrado->nombre << endl;
-    cout << "  Fecha: " << sesion.fecha << endl;
-    cout << "  Duracion programada: " << sesion.duracion_programada << " horas" << endl;
+    cout << "\nSesion registrada con codigo " << sesion.codigo_sesion << endl;
+    cout << "Equipo: " << equipo_encontrado->nombre << endl;
+    cout << "Usuario: " << usuario_encontrado->nombre << endl;
+    cout << "Fecha: " << sesion.fecha << endl;
+    cout << "Duracion programada: " << sesion.duracion_programada << " horas" << endl;
 }
 
 void registrarCierreSesion(Equipo* equipos, int num_equipos) {
-    int cod_sesion;
-    cout << "Ingrese el codigo de la sesion a cerrar: ";
-    cin >> cod_sesion;
-    if (cin.fail()) {
-        cin.clear();
-        cin.ignore(1000, '\n');
-        cout << "Entrada no valida. Debe ingresar un numero." << endl;
+    ifstream lectura("sesiones.dat", ios::binary);
+    if (!lectura) {
+        cout << "No hay sesiones registradas aun" << endl;
         return;
     }
 
-    fstream archivo_binario("sesiones.dat", ios::binary | ios::in | ios::out);
-    if (!archivo_binario) {
-        cout << "No hay sesiones registradas aun." << endl;
+    cout << "\nSesiones abiertas:" << endl;
+    SesionUso temp;
+    bool hay_abiertas = false;
+    while (lectura.read(reinterpret_cast<char*>(&temp), sizeof(SesionUso))) {
+        if (!temp.cerrada) {
+            cout << "Codigo: " << temp.codigo_sesion
+                 << ", equipo: " << temp.codigo_equipo
+                 << ", usuario: " << temp.codigo_usuario
+                 << ", fecha: " << temp.fecha
+                 << ", duracion: " << temp.duracion_programada << "h" << endl;
+            hay_abiertas = true;
+        }
+    }
+    lectura.close();
+
+    if (!hay_abiertas) {
+        cout << "No hay sesiones abiertas." << endl;
         return;
     }
+
+    char entrada[20];
+    int cod_sesion = 0;
+    while (cod_sesion <= 0) {
+        cout << "Ingrese el codigo de la sesion a cerrar: ";
+        cin.getline(entrada, 20);
+        cod_sesion = atoi(entrada);
+        if (cod_sesion <= 0) {
+            cout << "Entrada no valida, intente nuevamente" << endl;
+        }
+    }
+
+    fstream archivo_binario("sesiones.dat", ios::binary | ios::in | ios::out);
 
     SesionUso sesion;
     bool encontrada = false;
@@ -446,31 +516,29 @@ void registrarCierreSesion(Equipo* equipos, int num_equipos) {
     }
 
     if (!encontrada) {
-        cout << "Sesion con codigo " << cod_sesion << " no encontrada." << endl;
+        cout << "Sesion con codigo " << cod_sesion << " no encontrada" << endl;
         archivo_binario.close();
         return;
     }
 
     if (sesion.cerrada) {
-        cout << "Esta sesion ya fue cerrada anteriormente." << endl;
+        cout << "Esta sesion ya fue cerrada anteriormente" << endl;
         archivo_binario.close();
         return;
     }
 
-    int duracion_real;
+    int duracion_real = 0;
     cout << "Duracion programada fue: " << sesion.duracion_programada << " horas" << endl;
-    cout << "Ingrese duracion real (horas): ";
-    cin >> duracion_real;
-    if (cin.fail() || duracion_real <= 0) {
-        cin.clear();
-        cin.ignore(1000, '\n');
-        cout << "Entrada no valida. La duracion debe ser un numero mayor a 0." << endl;
-        archivo_binario.close();
-        return;
+    while (duracion_real <= 0) {
+        cout << "Ingrese duracion real (horas): ";
+        cin.getline(entrada, 20);
+        duracion_real = atoi(entrada);
+        if (duracion_real <= 0) {
+            cout << "La duracion debe ser mayor a 0" << endl;
+        }
     }
 
     cout << "Ingrese observaciones tecnicas: ";
-    cin.ignore();
     cin.getline(sesion.observaciones, 100);
 
     sesion.duracion_real = duracion_real;
@@ -487,21 +555,21 @@ void registrarCierreSesion(Equipo* equipos, int num_equipos) {
             }
         }
         sesion.penalizacion = horas_extra * 0.03 * costo;
-        cout << "Penalizacion: " << horas_extra << " hora(s) extra -> $"
+        cout << "Penalizacion: " << horas_extra << " hora(s) extra $"
              << sesion.penalizacion << endl;
     }
 
-    char reporta_daño;
+    char reporta_dano[10];
     cout << "Se reporta daño en el equipo? (s/n): ";
-    cin >> reporta_daño;
+    cin.getline(reporta_dano, 10);
 
-    if (reporta_daño == 's' || reporta_daño == 'S') {
+    if (reporta_dano[0] == 's' || reporta_dano[0] == 'S') {
         Equipo* eptr = equipos;
         for (int i = 0; i < num_equipos; i++) {
             if ((eptr + i)->codigo == sesion.codigo_equipo) {
                 strcpy((eptr + i)->estado, "en mantenimiento");
                 cout << "Equipo " << (eptr + i)->nombre
-                     << " marcado como en mantenimiento." << endl;
+                     << " marcado como en mantenimiento" << endl;
                 break;
             }
         }
@@ -511,7 +579,7 @@ void registrarCierreSesion(Equipo* equipos, int num_equipos) {
     archivo_binario.write(reinterpret_cast<char*>(&sesion), sizeof(SesionUso));
     archivo_binario.close();
 
-    cout << "Sesion " << cod_sesion << " cerrada exitosamente." << endl;
+    cout << "Sesion " << cod_sesion << " cerrada." << endl;
 }
 
 void generarInformeUso(Equipo* equipos, int num_equipos) {
@@ -553,7 +621,9 @@ void generarInformeUso(Equipo* equipos, int num_equipos) {
     }
 
     for (int i = 0; i < num_equipos; i++) {
-        if (*(procesado + i)) continue;
+        if (*(procesado + i)) {
+            continue;
+        }
 
         char* lab_actual = (eptr + i)->laboratorio;
         int mayor_horas = -1;
@@ -570,9 +640,8 @@ void generarInformeUso(Equipo* equipos, int num_equipos) {
         }
 
         if (posicion_mayor >= 0) {
-            cout << "--" << lab_actual << ": "
-                 << (eptr + posicion_mayor)->nombre
-                 << " (" << mayor_horas << " horas)" << endl;
+            cout << "--" << lab_actual << ": " << (eptr + posicion_mayor)->nombre
+            << " (" << mayor_horas << " horas)" << endl;
         }
     }
 
@@ -614,7 +683,7 @@ void generarRankingUsuarios(Usuario* usuarios, int num_usuarios) {
     }
     archivo_binario.close();
 
-    cout << "\nRanking de usuarios criticos (penalizacion acumulada / sesiones):" << endl;
+    cout << "\nRanking de usuarios criticos:" << endl;
 
     bool* ya_mostrado = new bool[num_usuarios];
     for (int i = 0; i < num_usuarios; i++) {
@@ -627,8 +696,12 @@ void generarRankingUsuarios(Usuario* usuarios, int num_usuarios) {
         int posicion_mayor = -1;
 
         for (int i = 0; i < num_usuarios; i++) {
-            if (*(ya_mostrado + i)) continue;
-            if (*(cantidad_sesiones + i) == 0) continue;
+            if (*(ya_mostrado + i)) {
+                continue;
+            }
+            if (*(cantidad_sesiones + i) == 0) {
+                continue;
+            }
 
             double indice = *(penalizacion_acumulada + i) / *(cantidad_sesiones + i);
             if (indice > mayor_indice) {
@@ -637,20 +710,22 @@ void generarRankingUsuarios(Usuario* usuarios, int num_usuarios) {
             }
         }
 
-        if (posicion_mayor == -1) break;
+        if (posicion_mayor == -1) {
+            break;
+        }
 
         *(ya_mostrado + posicion_mayor) = true;
         mostrados++;
 
         cout << mostrados << ". " << (uptr + posicion_mayor)->nombre
-             << " (" << (uptr + posicion_mayor)->programa_academico << ")" << endl;
+             << ", " << (uptr + posicion_mayor)->programa_academico << endl;
         cout << "   Sesiones: " << *(cantidad_sesiones + posicion_mayor)
-             << " / Penalizacion acumulada: $" << *(penalizacion_acumulada + posicion_mayor)
+             << " / Penalizacion: $" << *(penalizacion_acumulada + posicion_mayor)
              << " / Indice: " << mayor_indice << endl;
     }
 
     if (mostrados == 0) {
-        cout << "No hay usuarios con sesiones registradas." << endl;
+        cout << "No hay usuarios con sesiones registradas" << endl;
     }
 
     delete[] penalizacion_acumulada;
